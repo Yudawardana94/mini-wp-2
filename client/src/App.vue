@@ -10,10 +10,39 @@
         :islogin="isLogin"
         @islogin="changeLogin"
         @toDetail="detailArticle"
+        @tosearchbytag="searchbyTag"
       ></home>
-      <article-detail :articleData="articleData" v-if="pageNow === 'articleDetail'"></article-detail>
+      <article-detail
+        :articleData="articleData"
+        v-if="pageNow === 'articleDetail'"
+        @tosearchbytag="searchbyTag"
+        @changePage="changePage"
+        :islogin="isLogin"
+        @islogin="changeLogin"
+      ></article-detail>
       <addArticle v-if="pageNow === 'newArticle'" @changePage="changePage"></addArticle>
-      
+      <searchbytag
+        v-if="pageNow === 'searchbytag'"
+        @changePage="changePage"
+        :islogin="isLogin"
+        @islogin="changeLogin"
+        @toDetail="detailArticle"
+        :foundTags="foundTags"
+      ></searchbytag>
+      <mypage
+        v-if="pageNow === 'mypage'"
+        @tosearchbytag="searchbyTag"
+        @change="changePage"
+        :islogin="isLogin"
+        @islogin="changeLogin"
+        @changePage="editArticle"
+      ></mypage>
+      <updatearticle
+        v-if="pageNow === 'updatearticle'"
+        :editArticleId="editArticleId"
+        @changePage="updateArticle"
+        @change="changePage"
+      ></updatearticle>
     </div>
   </div>
 </template>
@@ -23,6 +52,9 @@ import landing from "./components/landing.vue";
 import home from "./components/home.vue";
 import articleDetail from "./components/articleDetail.vue";
 import addArticle from "./components/addNewArticle.vue";
+import searchbytag from "./components/searchbytag.vue";
+import updatearticle from "./components/updateArticlePage.vue";
+import mypage from "./components/myProfilePage.vue";
 import axi from "./api";
 
 export default {
@@ -30,14 +62,20 @@ export default {
     home,
     landing,
     articleDetail,
-    addArticle
+    addArticle,
+    searchbytag,
+    updatearticle,
+    mypage
   },
   data() {
     return {
       isLogin: false,
       pageNow: "",
       activeUser: "",
-      articleData: ''
+      articleData: "",
+      editArticleId: "",
+      foundTags: "",
+      updateData: ""
     };
   },
   methods: {
@@ -47,6 +85,7 @@ export default {
       this.changePage("home");
     },
     changePage(page) {
+      console.log("change to", page);
       if (page === "landing") {
         this.$message({
           message: `Log out success.`,
@@ -55,10 +94,29 @@ export default {
       }
       this.pageNow = page;
     },
-    detailArticle(data){
-      console.log('di detail article method',data)
-      this.pageNow = data.page
-      this.articleData = data.article
+    editArticle(data) {
+      console.log(data, "ini data dari my profile");
+      this.pageNow = data.page;
+      this.editArticleId = data.articleId;
+      console.log(this.editArticleId, "ini dari app.vue");
+    },
+    detailArticle(data) {
+      console.log("di detail article method", data);
+      this.pageNow = data.page;
+      this.articleData = data.article;
+    },
+    searchbyTag(data) {
+      console.log("sudah sampe app.vue");
+      console.log(data, "isi datanya mana?");
+
+      this.pageNow = data.page;
+      this.foundTags = data.articletag;
+      console.log(this.foundTags);
+    },
+    updateArticle(data) {
+      this.pageNow = data.page;
+      this.updateData = data.articleId;
+      this.editArticleId = data.articleId
     },
     whoami() {
       console.log("ini juga di vue");
@@ -82,7 +140,7 @@ export default {
           console.log("lloh error di ap.vue??");
           console.log(err);
         });
-    },
+    }
   },
   mounted() {
     if (localStorage.getItem("token")) {

@@ -5,7 +5,9 @@ const { multer, UploadToGCS } = require('../middlewares/upload')
 
 // router.get('/getpicture',articleController.generatePic)
 router.get('/', articleController.findAll)
+router.get('/anArticle/:articleId',articleController.findArticle)
 router.get('/search', articleController.search) //search by article id // untuk menembak kesini gunakan localhost:3000/articles/search?articleId={{ article id }}
+router.get('/searchbytag', articleController.searchByTag)
 
 router.use('/', authentication)
 
@@ -16,7 +18,7 @@ router.patch('/clap/:articleId', articleController.clap)
 router.patch('/tag/:articleId', articleController.tag)
 router.get('/:articleId', articleController.findArticle)
 
-router.patch('/:articleId', authorization, articleController.update)
+router.patch('/:articleId', authorization, multer.single('image'),UploadToGCS,articleController.update)
 router.delete('/:articleId', authorization, articleController.delete)
 
 module.exports = router

@@ -1,7 +1,11 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 const { hash } = require('../helpers/bcryptjs')
-
+const lib = 'abcdefghijklmonpqrstuvwxyz'
+let name = ''
+for (let i = 0; i < 6; i++) {
+    name += lib[Math.floor(Math.random()*lib.length-1)]
+}
 let userSchema = new Schema({
     username: {
         type: String,
@@ -42,7 +46,8 @@ let userSchema = new Schema({
         minlength: [5, `Password mut be 5 character or greater`]
     },
     avatar: {
-        type: String
+        type: String,
+        default: `https://api.adorable.io/avatars/213/${name}.png`
     },
     follower: [{
         type: Schema.Types.ObjectId,

@@ -97,6 +97,8 @@ class ArticleController {
     }
 
     static update(req, res, next) {
+        console.log('lagi update');
+        
         let userId = req.logedUser._id
         let articleId = req.params.articleId
         let updateData = {}
@@ -106,24 +108,31 @@ class ArticleController {
             image,
             status
         } = req.body
+        // let cloudStoragePublicUrl = ''
+        if(req.file){
+            updateData.image = req.file.cloudStoragePublicUrl
+        }
         if (title) {
             updateData.title = title
         }
         if (content) {
             updateData.content = content
         }
-        if (image) {
-            updateData.image = image
-        }
+        // if (image) {
+        //     updateData.image = image
+        // }
         if (status) {
             updateData.status = status
         }
-
+        console.log(updateData,'=-=-=-=-=-=-=-')
         articleModel
             .findByIdAndUpdate(articleId, updateData, {
                 new: true
             })
             .then(updated => {
+                console.log(updated,'ini updated loh yaaaa')
+                console.log(updated.image);
+                
                 res.json(updated)
             })
             .catch(next)
@@ -243,6 +252,25 @@ class ArticleController {
             })
             .then(updated => {
                 res.json(updated)
+            })
+            .catch(next)
+    }
+
+    static searchByTag(req,res,next){
+        let tag = req.query.tag
+        console.log(tag)
+
+        articleModel
+            .find({
+                tags: {
+                    $in: tag
+                }
+            })
+            // ,populate('author','avatar email username _id')
+            .populate('author','avatar _id username email')
+            .then(foundArticle => {
+                console.log(foundArticle)
+                res.json(foundArticle)
             })
             .catch(next)
     }

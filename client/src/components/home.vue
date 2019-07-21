@@ -5,14 +5,22 @@
         <h1 class="logo">Adioos</h1>
 
         <div class="navbarRight">
-          <h3 class="add" :articleForm="articleForm" @click="showForm">Add+</h3>
+          <el-tooltip content="Click to add new Article" placement="bottom" effect="light">
+            <h3 class="add" :articleForm="articleForm" @click="showForm">Add+</h3>
+          </el-tooltip>
+          <el-tooltip class="item" effect="light" :content="logedUser.username" placement="bottom">
+            <h3 class="dashboard" @click="toMyProfile">Dashboard</h3>
+          </el-tooltip>
           <h3 class="signout" @click="onSignOut">SignOut</h3>
           <!-- <signOut></signOut> -->
         </div>
       </el-header>
 
+      <div class="pic">
+        <img class="carou" :src="image" alt="head" />
+      </div>
       <el-container>
-        <el-aside class="leftSide" width="250px"></el-aside>
+        <el-aside class="leftSide" width="170px"></el-aside>
 
         <el-main>
           <el-col>
@@ -24,7 +32,8 @@
             ></ListItem>
           </el-col>
         </el-main>
-        <el-aside width="230px">
+
+        <el-aside width="290px" class="right">
           <el-collapse accordion>
             <el-collapse-item title="My Article" name="myarticle">
               <div v-for="(userArticle,i) in userArticles" :key="i">
@@ -37,8 +46,8 @@
               </div>
             </el-collapse-item>
             <el-collapse-item title="Popular Tags" name="tags">
-              <div v-for="i in 5" :key="i">
-                <div class="accordionItem">{{i}}</div>
+              <div v-for="(topTag,i) in topTags" :key="i">
+                <div class="accordionItem" @click="searchByTag(topTag)">{{topTag}}</div>
               </div>
             </el-collapse-item>
           </el-collapse>
@@ -61,13 +70,17 @@ export default {
     return {
       articleForm: "hide",
       publicArticles: [],
-      userArticles: []
+      userArticles: [],
+      topTags: [],
+      logedUser: {},
+      image:
+        "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80"
     };
   },
   methods: {
     detailArticle(article) {
       console.log("article ke ini", article);
-      this.$emit("toDetail", { page: "articleDetail", article });
+      this.$emit("toDetail", { page: "articleDetail", article, dari: "home" });
     },
     showForm() {
       console.log(this.articleForm);
@@ -83,6 +96,14 @@ export default {
       this.$emit("islogin", false);
       this.$emit("changePage", "landing");
       localStorage.removeItem("token");
+      var auth2 = gapi.auth2.getAuthInstance();
+      auth2.signOut().then(function() {
+        console.log("User signed out.");
+      });
+    },
+    toMyProfile() {
+      console.log("ke profileku");
+      this.$emit("changePage", "mypage");
     },
     fetchArticle() {
       const loading = this.$loading({
@@ -95,9 +116,22 @@ export default {
         .get(`http://localhost:3000/articles`)
         .then(({ data }) => {
           loading.close();
-          console.log("berhasil masup doonggg");
-          console.log(data);
           this.publicArticles = data.reverse();
+          let popularTag = {};
+          data.forEach(element => {
+            // console.log(element)
+            element.tags.forEach(tag => {
+              popularTag[tag] = 1 + (popularTag[tag] || 0);
+            });
+          });
+          // console.log(popularTag,'ini tag popular')
+          let keysSorted = Object.keys(popularTag)
+            .sort(function(a, b) {
+              return popularTag[b] - popularTag[a];
+            })
+            .slice(0, 5);
+          this.topTags = keysSorted;
+          // console.log(keysSorted,'ini hasil sort')
         })
         .catch(err => {
           console.log(err);
@@ -112,6 +146,7 @@ export default {
         })
         .then(({ data }) => {
           console.log(data, "ini user article");
+          this.logedUser = data[0].author;
 
           if (data.length > 5) {
             for (let i = 1; i < 6; i++) {
@@ -130,17 +165,17 @@ export default {
     },
     moment(date) {
       return moment(date).format("MMM Do YY");
-    }
+    },
+    searchByTag(tag) {
+      console.log("search by tag", tag);
+
+      this.$emit("tosearchbytag", {
+        page: "searchbytag",
+        articletag: tag
+      });
+    },
   },
-  computed: {
-    displayedText() {
-      return "display";
-      // console.log(text.length);
-      // let displayed = text.substr(0, 250) + '...';
-      // console.log(displayed);
-      // return displayed;
-    }
-  },
+  computed: {},
   mounted() {
     this.fetchArticle();
     this.fetchUserArticle();
@@ -167,10 +202,12 @@ export default {
   align-items: center;
   justify-content: space-between;
   padding-top: 10px;
+  box-shadow: 1px 1px 10px 0.5px;
 }
 .navbarRight {
   display: flex;
   align-items: baseline;
+  font-family: "Raleway", sans-serif;
 }
 .timeline {
   padding: 10px;
@@ -182,20 +219,10 @@ export default {
   display: flex;
   flex-direction: column;
 }
-/* .card {
-  display: flex;
-  flex-direction: row;
-  margin: 5px 0px 15px 0px;
-  border: 2px solid black;
-  border-radius: 2%;
-  height: 180px;
+.dashboard {
+  padding-right: 20px;
+  cursor: pointer;
 }
-.image {
-  max-width: 100%;
-  height: auto;
-  width: 230px;
-  object-fit: cover;
-} */
 image:hover {
   zoom: 20%;
 }
@@ -213,4 +240,24 @@ image:hover {
   /* border: 1px solid black; */
   padding: 20px;
 }
+.carou {
+  width: 100%;
+  height: 350px;
+  object-fit: cover;
+  /* border: 1px solid blue; */
+  margin-bottom: 20px;
+  opacity: 0.8;
+  /* box-shadow: 1px 1px 10px 0.5px; */
+}
+.right {
+  /* border: 1px solid black */
+  font-family: "Sarala", sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+.accordionItem{
+  cursor: pointer;
+}
+
 </style>

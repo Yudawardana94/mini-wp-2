@@ -1,7 +1,7 @@
 <template>
   <el-container>
     <el-header>
-      <h1 class="logo">Adioos</h1>
+      <h1 class="logo" @click="backtohome">Adioos</h1>
 
       <div class="navbarRight">
         <el-button type="primary" @click="saveArticle('Unpublished')" round class="buttonPost">Save to Draft</el-button>
@@ -116,7 +116,7 @@ export default {
       const loading = this.$loading({
           lock: true,
           text: 'Your article is being processed...',
-          spinner: 'https://cdn.dribbble.com/users/200228/screenshots/2428662/svg.gif',
+          spinner: 'loading',
           background: 'rgba(0, 0, 0, 0.7)'
         });
       axios({
@@ -158,7 +158,11 @@ export default {
       this.$emit("islogin", false);
       this.$emit("changePage", "landing");
       localStorage.removeItem("token");
-    }
+    },
+    backtohome(){
+      console.log("bakctohomr")
+      this.$emit("changePage", "home");
+    },
   },
   mounted() {
     this.getEditor();

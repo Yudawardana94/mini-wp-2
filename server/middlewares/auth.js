@@ -4,8 +4,9 @@ const articleModel = require('../models/articleModel')
 
 module.exports = {
     authentication: function (req, res, next) {
+        // console.log('hehehe dari authentication')
         let token = req.headers.token
-        
+        console.log(token, 'ini dari auth lohh')
         if (!token) {
             res.status(400).json ({
                 code: 400,
@@ -14,11 +15,13 @@ module.exports = {
             })
         } else {
             let decode = verify(token)
+            console.log(decode,'][][[][][][][][][][][][][')
             userModel
                 .findOne({
                     email: decode.email
                 })
                 .then((found) => {
+                    console.log(found,'=-==-=-=-==-=-=-=-')
                     let decode = verify(token)
                     req.decode = decode
                     req.logedUser = found

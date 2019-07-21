@@ -11,9 +11,14 @@
   "license": "ISC",
   "dependencies": {
     "element-ui": "^2.10.1",
+    "font-awesome": "^4.7.0",
     "jodit": "^3.2.53",
+    "ment": "^0.1.0",
+    "vu": "0.0.0",
     "vue": "^2.6.10",
-    "vue-hot-reload-api": "^2.3.3"
+    "vue-hot-reload-api": "^2.3.3",
+    "vue-moment": "^4.0.0",
+    "vue-truncate-filter": "^1.1.7"
   },
   "devDependencies": {
     "@vue/component-compiler-utils": "^3.0.0",

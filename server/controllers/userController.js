@@ -10,6 +10,8 @@ class userController {
     static findAll(req, res, next) {
         userModel
             .find()
+            .populate('follower', 'username email')
+            .populate('following', 'username email')
             .then(allUser => {
                 res.json(allUser)
             })
@@ -24,6 +26,7 @@ class userController {
             // .populate('follower')
             // .populate('following')
             .then(user => {
+                console.log(user)
                 res.json(user)
             })
             .catch(next)
@@ -39,7 +42,7 @@ class userController {
         } else {
             searched.username = ue
         }
-
+        console.log('sampaisini')
         userModel
             .findOne(searched)
             .then(userFound => {
@@ -146,7 +149,7 @@ class userController {
             })
             .catch(next)
     }
-    
+
     static unfollow(req, res, next) {
         let targetId = req.body.targetId
         let userId = req.logedUser._id
@@ -219,6 +222,24 @@ class userController {
                 res.status(200).json({
                     token
                 })
+            })
+            .catch(next)
+    }
+    static whoami(req, res, next) {
+        console.log('hehehee')
+        let userId = req.logedUser._id
+
+        userModel
+            .findById(userId)
+            .then(user => {
+                let sendToClient = {
+                    _id: user._id, 
+                    username: user.username,
+                    email: user.email, 
+                    avatar: user.avatar
+                }
+                console.log(sendToClient)
+                res.json(sendToClient)
             })
             .catch(next)
     }

@@ -18,6 +18,13 @@
 
       <div class="pic">
         <img class="carou" :src="image" alt="head" />
+        <!-- <h1>Aaaaa</h1> -->
+        <el-form class="search">
+          <el-form-item label="Search Article">
+            <el-input icon="el-icon-search" v-model="searched"></el-input>
+            <el-button class="searchButton" type="primary">Primary</el-button>
+          </el-form-item>
+        </el-form>
       </div>
       <el-container>
         <el-aside class="leftSide" width="170px"></el-aside>
@@ -51,11 +58,22 @@
               </div>
             </el-collapse-item>
           </el-collapse>
-          <h1 style="font-size: 30px; padding-top: 20px; font-family: 'Sarala', sans-serif;">Some News</h1>
-            <div v-if="news === []" class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+          <h1
+            style="font-size: 30px; padding-top: 20px; font-family: 'Sarala', sans-serif;"
+          >Some News</h1>
+          <div v-if="news === []" class="lds-roller">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+          </div>
           <div class="news" v-for="(newses,i) in news" :key="i">
-            <p class="title"> {{newses.title}} </p>
-            <p class="desc"> {{newses.description | truncate(50)}} </p>
+            <p class="title">{{newses.title | truncate(50)}}</p>
+            <p class="desc">{{newses.description | truncate(50)}}</p>
             <a target="blank" :href="newses.url" class="link">read full news</a>
           </div>
         </el-aside>
@@ -81,6 +99,7 @@ export default {
       topTags: [],
       logedUser: {},
       news: [],
+      searched: "",
       image:
         "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80"
     };
@@ -191,14 +210,13 @@ export default {
           console.log(data, "ini news");
           this.news = data;
         })
-        .catch(err=>{
-          console.log(err)
+        .catch(err => {
+          console.log(err);
           this.$message({
             type: "error",
             message: `Oops something wrong`
-          })
-        }
-        );
+          });
+        });
     }
   },
   computed: {},
@@ -214,6 +232,20 @@ export default {
 /* * {
   border: 1px solid black;
 } */
+.search {
+  /* color: rgb(9, 11, 26); */
+  width: 800px;
+  position: absolute;
+  top: 35%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.searchButton{
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translate(-50%, 30%);
+}
 .logo {
   font-family: "Fascinate", cursive;
 }
@@ -295,13 +327,13 @@ image:hover {
   border-radius: 4px;
   /* box-shadow: 0px 0px 5px 0.001px; */
 }
-.news{
+.news {
   font-family: "Sarala", sans-serif;
   font-size: 13px;
   font-weight: 400;
   padding: 12px 15px;
 }
-.title{
+.title {
   font-size: 13px;
   font-weight: 600;
 }
@@ -389,5 +421,4 @@ image:hover {
     transform: rotate(360deg);
   }
 }
-
 </style>

@@ -51,6 +51,13 @@
               </div>
             </el-collapse-item>
           </el-collapse>
+          <h1 style="font-size: 30px; padding-top: 20px; font-family: 'Sarala', sans-serif;">Some News</h1>
+            <div v-if="news === []" class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+          <div class="news" v-for="(newses,i) in news" :key="i">
+            <p class="title"> {{newses.title}} </p>
+            <p class="desc"> {{newses.description | truncate(50)}} </p>
+            <a target="blank" :href="newses.url" class="link">read full news</a>
+          </div>
         </el-aside>
       </el-container>
     </el-container>
@@ -73,6 +80,7 @@ export default {
       userArticles: [],
       topTags: [],
       logedUser: {},
+      news: [],
       image:
         "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80"
     };
@@ -174,11 +182,30 @@ export default {
         articletag: tag
       });
     },
+    getNews() {
+      axios({
+        url: `http://localhost:3000/news/getNews`,
+        method: "GET"
+      })
+        .then(({ data }) => {
+          console.log(data, "ini news");
+          this.news = data;
+        })
+        .catch(err=>{
+          console.log(err)
+          this.$message({
+            type: "error",
+            message: `Oops something wrong`
+          })
+        }
+        );
+    }
   },
   computed: {},
   mounted() {
     this.fetchArticle();
     this.fetchUserArticle();
+    this.getNews();
   }
 };
 </script>
@@ -255,9 +282,112 @@ image:hover {
   font-size: 15px;
   font-weight: 700;
   text-transform: capitalize;
+  height: 100vh;
 }
-.accordionItem{
+.accordionItem {
   cursor: pointer;
+}
+.news {
+  border: 0.6px solid grey;
+  margin-right: 15px;
+  margin-top: 10px;
+  height: 110px;
+  border-radius: 4px;
+  /* box-shadow: 0px 0px 5px 0.001px; */
+}
+.news{
+  font-family: "Sarala", sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  padding: 12px 15px;
+}
+.title{
+  font-size: 13px;
+  font-weight: 600;
+}
+.lds-roller {
+  display: inline-block;
+  position: relative;
+  width: 64px;
+  height: 64px;
+}
+.lds-roller div {
+  animation: lds-roller 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+  transform-origin: 32px 32px;
+}
+.lds-roller div:after {
+  content: " ";
+  display: block;
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #000;
+  margin: -3px 0 0 -3px;
+}
+.lds-roller div:nth-child(1) {
+  animation-delay: -0.036s;
+}
+.lds-roller div:nth-child(1):after {
+  top: 50px;
+  left: 50px;
+}
+.lds-roller div:nth-child(2) {
+  animation-delay: -0.072s;
+}
+.lds-roller div:nth-child(2):after {
+  top: 54px;
+  left: 45px;
+}
+.lds-roller div:nth-child(3) {
+  animation-delay: -0.108s;
+}
+.lds-roller div:nth-child(3):after {
+  top: 57px;
+  left: 39px;
+}
+.lds-roller div:nth-child(4) {
+  animation-delay: -0.144s;
+}
+.lds-roller div:nth-child(4):after {
+  top: 58px;
+  left: 32px;
+}
+.lds-roller div:nth-child(5) {
+  animation-delay: -0.18s;
+}
+.lds-roller div:nth-child(5):after {
+  top: 57px;
+  left: 25px;
+}
+.lds-roller div:nth-child(6) {
+  animation-delay: -0.216s;
+}
+.lds-roller div:nth-child(6):after {
+  top: 54px;
+  left: 19px;
+}
+.lds-roller div:nth-child(7) {
+  animation-delay: -0.252s;
+}
+.lds-roller div:nth-child(7):after {
+  top: 50px;
+  left: 14px;
+}
+.lds-roller div:nth-child(8) {
+  animation-delay: -0.288s;
+}
+.lds-roller div:nth-child(8):after {
+  top: 45px;
+  left: 10px;
+}
+@keyframes lds-roller {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 </style>

@@ -8,6 +8,7 @@ router.get('/', articleController.findAll)
 router.get('/anArticle/:articleId',articleController.findArticle)
 router.get('/search', articleController.search) //search by article id // untuk menembak kesini gunakan localhost:3000/articles/search?articleId={{ article id }}
 router.get('/searchbytag', articleController.searchByTag)
+router.get('/getNews',articleController.getNews)
 
 router.use('/', authentication)
 

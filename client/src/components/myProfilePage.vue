@@ -61,27 +61,42 @@
                           type="primary"
                           size="mini"
                           effect="plain"
+                          @click="searchByTag(tag)"
                           v-for="(tag,i) in article.tags"
                           :key="i"
                         >{{tag}}</el-tag>
                       </div>
                       <div style="padding: 3px;" class="articlebodymenus">
-                        <el-button
-                          size="mini"
-                          class="articlebodymenusicon"
-                          type="primary"
-                          icon="el-icon-edit"
-                          @click="editArticle(article._id)"
-                          circle
-                        ></el-button>
-                        <el-button
-                          size="mini"
-                          class="articlebodymenusicon"
-                          type="danger"
-                          icon="el-icon-delete"
-                          @click="remove(article._id)"
-                          circle
-                        ></el-button>
+                        <el-tooltip
+                          class="item"
+                          effect="light"
+                          content="Click to edit this article"
+                          placement="left-start"
+                        >
+                          <el-button
+                            size="mini"
+                            class="articlebodymenusicon"
+                            type="primary"
+                            icon="el-icon-edit"
+                            @click="editArticle(article._id)"
+                            circle
+                          ></el-button>
+                        </el-tooltip>
+                        <el-tooltip
+                          class="item"
+                          effect="light"
+                          content="Right Bottom prompts info"
+                          placement="right-end"
+                        >
+                          <el-button
+                            size="mini"
+                            class="articlebodymenusicon"
+                            type="danger"
+                            icon="el-icon-delete"
+                            @click="remove(article._id)"
+                            circle
+                          ></el-button>
+                        </el-tooltip>
                       </div>
                     </div>
                   </div>
@@ -194,6 +209,14 @@ export default {
       var auth2 = gapi.auth2.getAuthInstance();
       auth2.signOut().then(function() {
         console.log("User signed out.");
+      });
+    },
+    searchByTag(tag) {
+      console.log("search by tag", tag);
+
+      this.$emit("tosearchbytag", {
+        page: "searchbytag",
+        articletag: tag
       });
     }
   },
@@ -346,13 +369,13 @@ export default {
   flex-direction: column;
   justify-content: baseline;
   padding-right: 35px;
-  align-items: center
+  align-items: center;
 }
 .follower {
   display: flex;
   flex-direction: column;
   justify-content: baseline;
   padding-right: 35px;
-  align-items: center
+  align-items: center;
 }
 </style>

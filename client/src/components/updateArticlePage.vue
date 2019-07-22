@@ -12,7 +12,7 @@
     <el-main>
       <el-row :gutter="20">
         <el-col :span="18" :offset="3">
-          <div class="grid-content bg-purple">
+          <div class="form">
             <el-form ref="form" :label-position="'top'" :model="article" label-width="120px">
               <el-form-item label="Title: " :label-position="'top'">
                 <el-input v-model="article.title"></el-input>
@@ -28,7 +28,7 @@
                   :on-remove="handleRemove"
                   :on-success="handleSuccess"
                   :file-list="fileList"
-                  :limit="2"
+                  :limit="1"
                   list-type="picture"
                   v-model="file"
                 >
@@ -205,4 +205,11 @@ export default {
 </script>
 
 <style>
+.form {
+  font-family: "Sarala", sans-serif;
+}
+.el-form-item__label{
+  font-size: 20px;
+  font-weight: 700;
+}
 </style>

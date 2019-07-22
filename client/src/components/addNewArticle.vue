@@ -1,19 +1,24 @@
 <template>
   <el-container>
-    <el-header>
+    <el-header height="80px">
       <h1 class="logo" @click="backtohome">Adioos</h1>
 
       <div class="navbarRight">
-        <el-button type="primary" @click="saveArticle('Unpublished')" round class="buttonPost">Save to Draft</el-button>
+        <el-button
+          type="primary"
+          @click="saveArticle('Unpublished')"
+          round
+          class="buttonPost"
+        >Save to Draft</el-button>
         <h3 class="signout" @click="onSignOut">SignOut</h3>
         <!-- <signOut></signOut> -->
       </div>
     </el-header>
     <el-main>
       <el-row :gutter="20">
-        <el-col :span="20" :offset="2">
-          <form>
-            <div class="grid-content bg-purple">
+        <el-col :span="16" :offset="4">
+          <form v-on:submit.prevent="saveArticle('Published')">
+            <div class="form">
               <p>Title</p>
               <el-input v-model="article.title"></el-input>
               <br />
@@ -43,10 +48,15 @@
             <!-- <input type="submit" @submit.prevent="saveArticle('Unpublished')"> -->
             <br />
             <br />
-            <el-button type="success" @click="saveArticle('Published')" >Post!</el-button>
+            <el-tooltip placement="top">
+              <div slot="content">
+                To save as a draft,<br/> click on the upper right
+              </div>
+              <el-button type="success" @click="saveArticle('Published')">Post!</el-button>
+            </el-tooltip>
           </form>
         </el-col>
-        <el-col :span="2">
+        <el-col :span="4">
           <div class="grid-content bg-purple"></div>
         </el-col>
       </el-row>
@@ -103,7 +113,7 @@ export default {
       console.log(this.$ref);
     },
     saveArticle(status) {
-      console.log(status)
+      console.log(status);
       this.article.status = status;
       console.log(this.article, "ini berhasil di submit");
       let formData = new FormData();
@@ -114,11 +124,11 @@ export default {
       formData.append("status", this.article.status);
 
       const loading = this.$loading({
-          lock: true,
-          text: 'Your article is being processed...',
-          spinner: 'loading',
-          background: 'rgba(0, 0, 0, 0.7)'
-        });
+        lock: true,
+        text: "Your article is being processed...",
+        spinner: "el-icon-loading",
+        background: "rgba(0, 0, 0, 0.7)"
+      });
       axios({
         method: "post",
         url: "http://localhost:3000/articles",
@@ -134,7 +144,7 @@ export default {
         }
       })
         .then(({ data }) => {
-          loading.close()
+          loading.close();
           console.log("eedededededeh");
           console.log(data);
           this.$message({
@@ -159,10 +169,10 @@ export default {
       this.$emit("changePage", "landing");
       localStorage.removeItem("token");
     },
-    backtohome(){
-      console.log("bakctohomr")
+    backtohome() {
+      console.log("bakctohomr");
       this.$emit("changePage", "home");
-    },
+    }
   },
   mounted() {
     this.getEditor();
@@ -191,5 +201,11 @@ export default {
 }
 .buttonPost {
   margin-right: 25px;
+}
+.form {
+  font-family: "Sarala", sans-serif;
+}
+.el-tooltip{
+  font-family: "Sarala", sans-serif;
 }
 </style>

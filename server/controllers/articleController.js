@@ -1,4 +1,5 @@
 const articleModel = require('../models/articleModel')
+const axios = require('axios')
 
 class ArticleController {
     static create(req, res, next) {
@@ -279,6 +280,22 @@ class ArticleController {
         // generate random picture from "https://source.unsplash.com/random/1080x720"
         // axios.get()
     }   
+    static getNews(req,res,next){
+        axios({
+            url: `https://newsapi.org/v2/top-headlines?country=id&apiKey=${process.env.NEWS_API_KEY}`,
+            method: 'GET'
+        })
+        .then(({ data })=> {
+            console.log(data)
+            let news = []
+            for (let i = 0; i < 10; i++) {
+                // console.log(data[i])
+                news.push(data.articles[i])
+            }
+            res.json(news)
+        })
+        .catch(next)
+    }
 }
 
 module.exports = ArticleController

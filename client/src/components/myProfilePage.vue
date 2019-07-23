@@ -117,6 +117,8 @@
 </template>
 
 <script>
+import axios from '../api'
+
 export default {
   data() {
     return {
@@ -128,7 +130,7 @@ export default {
   methods: {
     fetchData() {
       axios({
-        url: `http://localhost:3000/articles/logedUser`,
+        url: `/articles/logedUser`,
         method: "GET",
         headers: {
           token: localStorage.getItem("token")
@@ -144,7 +146,7 @@ export default {
     },
     whoami() {
       axios({
-        url: `http://localhost:3000/users/whoami`,
+        url: `/users/whoami`,
         method: `GET`,
         headers: {
           token: localStorage.getItem("token")
@@ -176,7 +178,7 @@ export default {
       )
         .then(() => {
           axios({
-            url: `http://localhost:3000/articles/${articleId}`,
+            url: `/articles/${articleId}`,
             method: "DELETE",
             headers: {
               token: localStorage.getItem("token")

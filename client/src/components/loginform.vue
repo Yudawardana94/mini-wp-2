@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import { axi } from "../api";
+import axios from '../api'
 
 export default {
   props: ["isLogin"],
@@ -58,7 +58,7 @@ export default {
       const profile = googleUser.getBasicProfile(); // etc etc
       var id_token = googleUser.getAuthResponse().id_token;
       axios
-        .post("http://localhost:3000/users/signin/google", {
+        .post("/users/signin/google", {
           idToken: id_token
         })
         .then(({ data }) => {
@@ -89,7 +89,7 @@ export default {
       let ue = this.signin.name;
       let password = this.signin.password;
       axios
-        .post("http://localhost:3000/users/signin", {
+        .post("/users/signin", {
           ue,
           password
         })

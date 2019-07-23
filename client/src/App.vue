@@ -66,7 +66,7 @@ import searchbytag from "./components/searchbytag.vue";
 import updatearticle from "./components/updateArticlePage.vue";
 import mypage from "./components/myProfilePage.vue";
 import searchbyarticle from "./components/searchbyarticle.vue";
-import axi from "./api";
+import axios from "./api";
 
 export default {
   components: {
@@ -135,7 +135,7 @@ export default {
       console.log("ini juga di vue");
       console.log("identifikasi diri sendiri", localStorage.getItem("token"));
       axios
-        .get(`http://localhost:3000/users/whoami`, {
+        .get(`/users/whoami`, {
           headers: {
             token: localStorage.getItem("token")
           }

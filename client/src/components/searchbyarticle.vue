@@ -37,6 +37,7 @@
 
 <script>
 import ListItem from "./ListItem.vue";
+import axios from '../api'
 
 export default {
   components: {
@@ -59,7 +60,7 @@ export default {
     },
     search() {
       axios({
-        url: `http://localhost:3000/articles/search?hints=${this.clue}`,
+        url: `/articles/search?hints=${this.clue}`,
         method: "GET",
         headers: {
           token: localStorage.getItem("token")

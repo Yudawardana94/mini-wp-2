@@ -1,6 +1,8 @@
-// let axi = axios.create({
-//     baseURL: `http://localhost:3000`,
-//     headers: {token: localStorage.getItem('token')}
-// })
+import axios from 'axios'
 
-// module.exports = axi
+// let axi = 
+
+export default  axios.create({
+    baseURL: `http://35.240.236.227`
+    // baseURL: `http://localhost:3000`
+})

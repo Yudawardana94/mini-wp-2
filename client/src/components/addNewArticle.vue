@@ -65,6 +65,8 @@
 </template>
 
 <script>
+import axios from '../api'
+
 export default {
   //   props: ["articleForm"],
   data() {
@@ -131,7 +133,7 @@ export default {
       });
       axios({
         method: "post",
-        url: "http://localhost:3000/articles",
+        url: "/articles",
         data: formData,
         config: {
           headers: {

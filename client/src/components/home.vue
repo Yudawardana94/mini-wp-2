@@ -87,8 +87,10 @@
 <script>
 import signOut from "./signOut.vue";
 import ListItem from "./ListItem.vue";
+import axios from '../api'
 
 export default {
+  
   components: {
     signOut,
     ListItem
@@ -142,7 +144,7 @@ export default {
         background: "rgba(0, 0, 0, 0.7)"
       });
       axios
-        .get(`http://localhost:3000/articles`)
+        .get(`/articles`)
         .then(({ data }) => {
           loading.close();
           this.publicArticles = data.reverse();
@@ -168,7 +170,7 @@ export default {
     },
     fetchUserArticle() {
       axios
-        .get(`http://localhost:3000/articles/logedUser`, {
+        .get(`/articles/logedUser`, {
           headers: {
             token: localStorage.getItem("token")
           }
@@ -205,7 +207,7 @@ export default {
     },
     getNews() {
       axios({
-        url: `http://localhost:3000/news/getNews`,
+        url: `/news/getNews`,
         method: "GET"
       })
         .then(({ data }) => {

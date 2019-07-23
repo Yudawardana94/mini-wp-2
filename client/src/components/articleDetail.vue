@@ -107,6 +107,8 @@
 </template>
 
 <script>
+import axios from '../api'
+
 export default {
   props: ["articleData"],
   data() {
@@ -120,9 +122,9 @@ export default {
   methods: {
     clap(id) {
       console.log("ngeclap ini", id);
-      console.log(`http://localhost:3000/articles/clap/${id}`);
+      console.log(`/articles/clap/${id}`);
       axios({
-        url: `http://localhost:3000/articles/clap/${id}`,
+        url: `/articles/clap/${id}`,
         method: "PATCH",
         headers: {
           token: localStorage.getItem("token")
@@ -150,9 +152,9 @@ export default {
     },
     bookmark(id) {
       console.log("ngebookmark ini", id);
-      console.log(`http://localhost:3000/articles/bookmark/${id}`);
+      console.log(`/articles/bookmark/${id}`);
       axios({
-        url: `http://localhost:3000/articles/bookmark/${id}`,
+        url: `/articles/bookmark/${id}`,
         method: "PATCH",
         headers: {
           token: localStorage.getItem("token")
@@ -182,7 +184,7 @@ export default {
       console.log("berhasil ngefetch");
 
       axios
-        .get(`http://localhost:3000/articles`)
+        .get(`/articles`)
         .then(({ data }) => {
           console.log(data, ", ;hasil fetch");
           this.article = data;
@@ -195,7 +197,7 @@ export default {
       console.log(this.hasfollow, "ini status follownya");
       console.log("akan ngefollow", targetId);
       axios({
-        url: `http://localhost:3000/users/check`,
+        url: `/users/check`,
         method: "POST",
         data: {
           targetId: targetId
@@ -208,7 +210,7 @@ export default {
           if (data.checked === true) {
             console.log("ke unfoll");
             return axios({
-              url: `http://localhost:3000/users/unfollow`,
+              url: `/users/unfollow`,
               method: "PATCH",
               data: {
                 targetId: targetId
@@ -220,7 +222,7 @@ export default {
           } else {
             console.log("ke foll");
             return axios({
-              url: `http://localhost:3000/users/follow`,
+              url: `/users/follow`,
               method: "PATCH",
               data: {
                 targetId: targetId
@@ -246,7 +248,7 @@ export default {
     },
     getAnArticle() {
       axios({
-        url: "http://localhost:3000/articles/anArticle/" + this.article._id,
+        url: "/articles/anArticle/" + this.article._id,
         method: "GET",
         headers: {
           token: localStorage.getItem("token")
@@ -275,7 +277,7 @@ export default {
       console.log(this.article.author._id, " ini id authornya");
       // console.log("identifikasi diri sendiri", localStorage.getItem("token"));
       axios({
-        url: `http://localhost:3000/users/check`,
+        url: `/users/check`,
         method: "POST",
         data: {
           targetId: this.article.author._id

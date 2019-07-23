@@ -31,6 +31,8 @@
 </template>
 
 <script>
+import axios from '../api'
+
 export default {
   props: ["isLogin"],
   data() {
@@ -54,7 +56,7 @@ export default {
       let email = this.signup.email;
       let password = this.signup.password;
       axios
-        .post("http://localhost:3000/users/signup", {
+        .post("/users/signup", {
           username,
           email,
           password
@@ -65,12 +67,12 @@ export default {
           if (data.name === "ValidationError") {
             throw data;
           } else {
-            return axios.get("http://localhost:3000/users/getuser/" + data._id);
+            return axios.get("/users/getuser/" + data._id);
           }
         })
         .then(({ data }) => {
           console.log(data, " ini data darai find one abis register");
-          return axios.post("http://localhost:3000/users/signin", {
+          return axios.post("/users/signin", {
             ue: username,
             password
           });

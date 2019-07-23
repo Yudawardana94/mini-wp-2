@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.19.0",
     "element-ui": "^2.10.1",
     "font-awesome": "^4.7.0",
     "jodit": "^3.2.53",

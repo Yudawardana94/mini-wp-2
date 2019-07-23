@@ -38,6 +38,7 @@
 
 <script>
 import ListItem from "./ListItem.vue";
+import axios from '../api'
 
 export default {
   components: {
@@ -60,7 +61,7 @@ export default {
     },
     searchTag() {
       axios({
-        url: `http://localhost:3000/articles/searchbytag?tag=${this.foundTags}`,
+        url: `/articles/searchbytag?tag=${this.foundTags}`,
         method: `GET`,
         headers: {
           token: {

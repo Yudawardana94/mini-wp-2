@@ -52,6 +52,8 @@
 </template>
 
 <script>
+import axios from '../api'
+
 export default {
   props: ["editArticleId"],
   data() {
@@ -99,7 +101,7 @@ export default {
     fetchData() {
       console.log("akan mengambil data");
       axios({
-        url: `http://localhost:3000/articles/${this.editArticleId}`,
+        url: `/articles/${this.editArticleId}`,
         method: "GET",
         headers: {
           token: localStorage.getItem("token")
@@ -132,7 +134,7 @@ export default {
         background: "rgba(0, 0, 0, 0.7)"
       });
       axios({
-        url: `http://localhost:3000/articles/${articleId}`,
+        url: `/articles/${articleId}`,
         method: "PATCH",
         data: formData,
         config: {

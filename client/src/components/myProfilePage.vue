@@ -4,6 +4,9 @@
       <h1 class="logo" @click="backtohome">Adioos</h1>
 
       <div class="navbarRight">
+        <el-tooltip content="Click to add new Article" placement="bottom" effect="light">
+          <h3 class="add" :articleForm="articleForm" @click="showForm">Add+</h3>
+        </el-tooltip>
         <h3 class="signout" @click="onSignOut">SignOut</h3>
       </div>
     </el-header>
@@ -85,7 +88,7 @@
                         <el-tooltip
                           class="item"
                           effect="light"
-                          content="Right Bottom prompts info"
+                          content="click to delete this article"
                           placement="right-end"
                         >
                           <el-button
@@ -118,7 +121,8 @@ export default {
   data() {
     return {
       userArticles: [],
-      usersInfo: {}
+      usersInfo: {},
+      articleForm: "hide",
     };
   },
   methods: {
@@ -149,6 +153,15 @@ export default {
         console.log(data, "ini data user");
         this.usersInfo = data;
       });
+    },
+    showForm() {
+      console.log(this.articleForm);
+      this.$emit("addArticle", "newArticle");
+      if (this.articleForm === "hide") {
+        this.articleForm = "show";
+      } else if (this.articleForm === "show") {
+        this.articleForm = "hide";
+      }
     },
     remove(articleId) {
       console.log(`loh kok ${articleId} dihapus??`);
@@ -377,5 +390,9 @@ export default {
   justify-content: baseline;
   padding-right: 35px;
   align-items: center;
+}
+.add{
+  padding-right: 20px;
+  cursor: pointer;
 }
 </style>

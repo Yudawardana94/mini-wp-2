@@ -11,6 +11,7 @@
         @islogin="changeLogin"
         @toDetail="detailArticle"
         @tosearchbytag="searchbyTag"
+        @searchbyarticle="searchbyarticle"
       ></home>
       <article-detail
         :articleData="articleData"
@@ -35,6 +36,7 @@
         @change="changePage"
         :islogin="isLogin"
         @islogin="changeLogin"
+        @addArticle="changePage"
         @changePage="editArticle"
       ></mypage>
       <updatearticle
@@ -43,6 +45,14 @@
         @changePage="updateArticle"
         @change="changePage"
       ></updatearticle>
+      <searchbyarticle
+        @changePage="changePage"
+        :islogin="isLogin"
+        @islogin="changeLogin"
+        @toDetail="detailArticle"
+        :clue="clue"
+        v-if="pageNow === 'searchbyarticle'"
+      ></searchbyarticle>
     </div>
   </div>
 </template>
@@ -55,6 +65,7 @@ import addArticle from "./components/addNewArticle.vue";
 import searchbytag from "./components/searchbytag.vue";
 import updatearticle from "./components/updateArticlePage.vue";
 import mypage from "./components/myProfilePage.vue";
+import searchbyarticle from "./components/searchbyarticle.vue";
 import axi from "./api";
 
 export default {
@@ -65,7 +76,8 @@ export default {
     addArticle,
     searchbytag,
     updatearticle,
-    mypage
+    mypage,
+    searchbyarticle
   },
   data() {
     return {
@@ -75,7 +87,8 @@ export default {
       articleData: "",
       editArticleId: "",
       foundTags: "",
-      updateData: ""
+      updateData: "",
+      clue: ""
     };
   },
   methods: {
@@ -116,7 +129,7 @@ export default {
     updateArticle(data) {
       this.pageNow = data.page;
       this.updateData = data.articleId;
-      this.editArticleId = data.articleId
+      this.editArticleId = data.articleId;
     },
     whoami() {
       console.log("ini juga di vue");
@@ -140,6 +153,12 @@ export default {
           console.log("lloh error di ap.vue??");
           console.log(err);
         });
+    },
+    searchbyarticle(clue) {
+      console.log(clue, "ini clue yang dicarinya");
+      this.pageNow = "searchbyarticle";
+      this.clue = clue;
+      console.log(this.clue, "ini this.clue");
     }
   },
   mounted() {

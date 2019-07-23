@@ -153,7 +153,7 @@ export default {
             message: `Article has been created.`,
             type: "success"
           });
-          this.changePage("home");
+          this.$emit("change","home");
         })
         .catch(err => {
           this.$message({

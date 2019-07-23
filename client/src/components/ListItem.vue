@@ -2,17 +2,16 @@
   <div class="card" v-if="data">
     <img class="image" :src="data.image" />
     <span class="content">
-      <h1 class="title">{{ data.title }}</h1>
-      <!-- <div v-html="truncate"/> -->
-      <p class="data">{{data.content | truncate(220)}}</p>
-      <!-- <p v-html="data.content | truncate(220)"></p> -->
+      <h1 class="title" @click="detailPage(data)">{{ data.title }}</h1>
+      <truncate class="data" collapsed-text-class="collapsed" clamp="" :length="130" less="Show Less" type="html" :text="data.content"></truncate>
+      <!-- <truncate action-class="customClass" clamp="Show more" :length="90" less="Show Less" type="html" :text="data.content"></truncate> -->
       <div class="bot">
         <div class="left">
           <p>
             author:
             <span>{{ data.author.username}}</span>
           </p>
-          <span>{{ data.createdAt | moment("MMMM Do YYYY") }}</span>
+          <span >{{ data.createdAt | moment("MMMM Do YYYY") }}</span>
         </div>
         <div class="right">
           <a @click="detailPage(data)">Read More</a>
@@ -24,7 +23,13 @@
 </template>
 
 <script>
+// import truncate from 'vue-truncate-filter'
+import truncate from 'vue-truncate-collapsed'
+
 export default {
+  components: {
+    truncate
+  },
   props: ["data"],
   computed: {},
   methods: {
@@ -107,5 +112,9 @@ h1 {
   font-size: 21px;
   font-weight: 800;
   text-transform: capitalize;
+  cursor: pointer;
 }
+/* .dataleft{
+  font-size: 12px;
+} */
 </style>

@@ -4,8 +4,8 @@ const axios = require('axios')
 class ArticleController {
     static create(req, res, next) {
         console.log('article create')
-        console.log(req.body,'ini reqbody')
-        console.log(req.file,'ini reqfile')
+        console.log(req.body, 'ini reqbody')
+        console.log(req.file, 'ini reqfile')
         let {
             title,
             content,
@@ -13,7 +13,7 @@ class ArticleController {
             status
         } = req.body
         let cloudStoragePublicUrl = ''
-        if(req.file){
+        if (req.file) {
             cloudStoragePublicUrl = req.file.cloudStoragePublicUrl
         }
         tags = tags.split(',')
@@ -31,7 +31,7 @@ class ArticleController {
         articleModel
             .create(newArticle)
             .then(created => {
-                console.log('berhasil',created)
+                console.log('berhasil', created)
                 res.json(created)
             })
             .catch(next)
@@ -42,7 +42,7 @@ class ArticleController {
             .find({
                 status: 'Published'
             })
-            .populate('author','avatar _id username email')
+            .populate('author', 'avatar _id username email')
             .then(allArticle => {
                 console.log('masup')
                 res.json(allArticle)
@@ -51,24 +51,22 @@ class ArticleController {
     }
 
     static search(req, res, next) {
-        let articleId = req.query.articleId
-        let searched = {}
-
-        if (req.query.articleId) {
-            searched._id = req.query.articleId
-        }
-        if (req.query.userId) {
-            searched.author = req.query.userId
-        }
+        let query = req.query.hints.toLowerCase()
 
         articleModel
-            .find(searched)
+            .find({
+                title: {
+                    $regex: new RegExp(`.*${query}.*`, "i")
+                },
+                status: 'Published'
+            })
             // .populate('clapper')
             // .populate('bookmarked')
             // .populate('tags')
-            // .populate('author', 'username')
-            .then(foundArticle => {
-                res.json(foundArticle)
+            .populate('author', 'username')
+            .then(found => {
+                console.log(found)
+                res.json(found)
             })
             .catch(next)
     }
@@ -99,7 +97,7 @@ class ArticleController {
 
     static update(req, res, next) {
         console.log('lagi update');
-        
+
         let userId = req.logedUser._id
         let articleId = req.params.articleId
         let updateData = {}
@@ -110,7 +108,7 @@ class ArticleController {
             status
         } = req.body
         // let cloudStoragePublicUrl = ''
-        if(req.file){
+        if (req.file) {
             updateData.image = req.file.cloudStoragePublicUrl
         }
         if (title) {
@@ -125,15 +123,15 @@ class ArticleController {
         if (status) {
             updateData.status = status
         }
-        console.log(updateData,'=-=-=-=-=-=-=-')
+        console.log(updateData, '=-=-=-=-=-=-=-')
         articleModel
             .findByIdAndUpdate(articleId, updateData, {
                 new: true
             })
             .then(updated => {
-                console.log(updated,'ini updated loh yaaaa')
+                console.log(updated, 'ini updated loh yaaaa')
                 console.log(updated.image);
-                
+
                 res.json(updated)
             })
             .catch(next)
@@ -168,7 +166,7 @@ class ArticleController {
                         }, {
                             new: true
                         })
-                        .populate('author','_id username email avatar')
+                        .populate('author', '_id username email avatar')
                 } else {
                     return articleModel
                         .findByIdAndUpdate(articleId, {
@@ -178,16 +176,22 @@ class ArticleController {
                         }, {
                             new: true
                         })
-                        .populate('author','_id username email avatar')
+                        .populate('author', '_id username email avatar')
                 }
             })
             .then(updated => {
-                if(updated.bookmarked.includes(userId)){
-                    res.json({data: updated, message:'Bookmarked' })
+                if (updated.bookmarked.includes(userId)) {
+                    res.json({
+                        data: updated,
+                        message: 'Bookmarked'
+                    })
+                } else {
+                    res.json({
+                        data: updated,
+                        message: 'Unbookmarked'
+                    })
                 }
-                else {
-                    res.json({data: updated, message:'Unbookmarked'})
-                }res.json(updated)
+                res.json(updated)
             })
             .catch(next)
     }
@@ -210,7 +214,7 @@ class ArticleController {
                         }, {
                             new: true
                         })
-                        .populate('author','_id username email avatar')
+                        .populate('author', '_id username email avatar')
                 } else {
                     return articleModel
                         .findByIdAndUpdate(articleId, {
@@ -220,16 +224,21 @@ class ArticleController {
                         }, {
                             new: true
                         })
-                        .populate('author','_id username email avatar')
+                        .populate('author', '_id username email avatar')
                 }
             })
             .then(updated => {
                 console.log(updated)
-                if(updated.clapper.includes(userId)){
-                    res.json({data: updated, message:'Claped' })
-                }
-                else {
-                    res.json({data: updated, message:'Unclaped'})
+                if (updated.clapper.includes(userId)) {
+                    res.json({
+                        data: updated,
+                        message: 'Claped'
+                    })
+                } else {
+                    res.json({
+                        data: updated,
+                        message: 'Unclaped'
+                    })
                 }
             })
             .catch(next)
@@ -257,7 +266,7 @@ class ArticleController {
             .catch(next)
     }
 
-    static searchByTag(req,res,next){
+    static searchByTag(req, res, next) {
         let tag = req.query.tag
         console.log(tag)
 
@@ -268,7 +277,7 @@ class ArticleController {
                 }
             })
             // ,populate('author','avatar email username _id')
-            .populate('author','avatar _id username email')
+            .populate('author', 'avatar _id username email')
             .then(foundArticle => {
                 console.log(foundArticle)
                 res.json(foundArticle)
@@ -279,22 +288,24 @@ class ArticleController {
     static generatePic() {
         // generate random picture from "https://source.unsplash.com/random/1080x720"
         // axios.get()
-    }   
-    static getNews(req,res,next){
+    }
+    static getNews(req, res, next) {
         axios({
-            url: `https://newsapi.org/v2/top-headlines?country=id&apiKey=${process.env.NEWS_API_KEY}`,
-            method: 'GET'
-        })
-        .then(({ data })=> {
-            console.log(data)
-            let news = []
-            for (let i = 0; i < 10; i++) {
-                // console.log(data[i])
-                news.push(data.articles[i])
-            }
-            res.json(news)
-        })
-        .catch(next)
+                url: `https://newsapi.org/v2/top-headlines?country=id&apiKey=${process.env.NEWS_API_KEY}`,
+                method: 'GET'
+            })
+            .then(({
+                data
+            }) => {
+                // console.log(data)
+                let news = []
+                for (let i = 0; i < 10; i++) {
+                    // console.log(data[i])
+                    news.push(data.articles[i])
+                }
+                res.json(news)
+            })
+            .catch(next)
     }
 }
 

@@ -1,6 +1,6 @@
 <template>
   <el-container>
-    <el-header height="60px">
+    <el-header height="80px">
       <h1 class="logo" @click="backtohome">Adioos</h1>
 
       <div class="navbarRight">

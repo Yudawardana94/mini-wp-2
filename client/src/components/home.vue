@@ -18,13 +18,15 @@
 
       <div class="pic">
         <img class="carou" :src="image" alt="head" />
-        <!-- <h1>Aaaaa</h1> -->
-        <el-form class="search">
-          <el-form-item label="Search Article">
-            <el-input icon="el-icon-search" v-model="searched"></el-input>
-            <el-button class="searchButton" type="primary">Primary</el-button>
+        <!-- <form @submit.prevent="searchArticle"> -->
+        <el-form class="search" @submit.prevent.native="searchArticle">
+          <h2>Search Article</h2>
+          <el-form-item label>
+            <el-input v-model="searched" placeholder="search title of article..."></el-input>
+            <!-- <el-button class="searchButton" type="primary" @click="searchArticle">Primary</el-button> -->
           </el-form-item>
         </el-form>
+        <!-- </form> -->
       </div>
       <el-container>
         <el-aside class="leftSide" width="170px"></el-aside>
@@ -217,6 +219,11 @@ export default {
             message: `Oops something wrong`
           });
         });
+    },
+    searchArticle() {
+      console.log(this.searched, "ini searched dari enter");
+      this.$emit("searchbyarticle", this.searched);
+      this.searched = "";
     }
   },
   computed: {},
@@ -240,7 +247,7 @@ export default {
   left: 50%;
   transform: translate(-50%, -50%);
 }
-.searchButton{
+.searchButton {
   position: absolute;
   top: 100%;
   left: 50%;
@@ -337,6 +344,13 @@ image:hover {
   font-size: 13px;
   font-weight: 600;
 }
+.el-input__inner {
+  height: 35px;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+}
+
+/* /// css loader */
 .lds-roller {
   display: inline-block;
   position: relative;

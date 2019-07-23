@@ -18,7 +18,7 @@ if (process.env.NODE_ENV === 'development') {
         if (err) console.log(err), console.log(`Can't connect to mongoose server.`);
         else console.log(`Mongoose connect success`)
     })
-} else if (process.env.NODE_ENV === 'production') {
+} else {
     mongoose.connect(`${process.env.DB_SERVER_ATLAS}`, {
         useNewUrlParser: true
     }, (err) => {
